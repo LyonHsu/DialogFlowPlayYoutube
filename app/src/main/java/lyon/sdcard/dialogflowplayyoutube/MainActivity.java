@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -68,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 super.DialogFlowAction(jsonObject);
                 String action = jsonObject.optString("action");
                 if(action.equals("play_music")){
-                    String artist = jsonObject.optString("artist");
-                    String song = jsonObject.optString("song");
-                   Toast.makeText(MainActivity.this,"播放:"+artist+" 歌曲:"+song,Toast.LENGTH_LONG).show();
+                    String artist = jsonObject.optString("artist","");
+                    String song = jsonObject.optString("any","");
+                    searchYoutube(artist+" "+song);
+                    Toast.makeText(MainActivity.this,"播放:"+artist+" 歌曲:"+song,Toast.LENGTH_LONG).show();
                     arrayList.add(toItem(Item.SPEAKTOGOTYPE ,jsonObject.toString()));
                     adapter.notifyDataSetChanged();
-                    searchYoutube(artist+" "+song);
 
                 }
             }
@@ -157,6 +158,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void searchYoutube(String keyWord){
+        Log.d(TAG,"searchYoutube keyWord:"+keyWord);
+        if(TextUtils.isEmpty(keyWord)) {
+            Log.e(TAG,"searchYoutube keyWord null");
+            Message message = new Message();
+            message.what=TOAST;
+            message.obj = "searchYoutube keyWord null";
+            mMainHandler.sendMessage(message);
+            return;
+        }
         new SearchYoutube(keyWord){
             public void YoutubePosters(List<YoutubePoster> posters){
                 Log.d(TAG,"YoutubeAdapter searchBtn onClick: YoutubePosters size:"+posters.size());

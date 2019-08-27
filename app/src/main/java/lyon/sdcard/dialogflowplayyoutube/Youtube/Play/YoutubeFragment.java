@@ -72,6 +72,8 @@ public class YoutubeFragment extends Fragment {
         }catch (Exception e){
             VIDEO_ID2.add(VIDEO_ID);
         }
+
+
         Log.d(TAG,"VIDEO_ID2 size:"+VIDEO_ID2.size());
 
         //get youtube fragment api
@@ -85,6 +87,8 @@ public class YoutubeFragment extends Fragment {
             // YouTubeプレーヤーの初期化成功
             @Override
             public void onInitializationSuccess(Provider provider, final YouTubePlayer player, boolean wasRestored) {
+                if(player==null)
+                    return;
                 if (!wasRestored) {
                     yooutPlayer=player;
                     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
